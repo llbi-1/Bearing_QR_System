@@ -1,24 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-<title>Bearing Traceability</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="style.css">
+    <title>Bearing QR Traceability System</title>
+
+
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f5f5f5;
+
+        }
+
+
+        h1 {
+
+            color: #1f4e79;
+
+        }
+
+
+        .container {
+
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 700px;
+
+        }
+
+
+        input {
+
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+
+        }
+
+
+        button {
+
+            padding: 10px 20px;
+            background: #1f4e79;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+
+        }
+
+
+        button:hover {
+
+            background: #163a5c;
+
+        }
+
+
+        table {
+
+            margin-top:20px;
+            width:100%;
+            border-collapse: collapse;
+
+        }
+
+
+        th {
+
+            background:#1f4e79;
+            color:white;
+
+        }
+
+
+        td, th {
+
+            padding:10px;
+            text-align:left;
+
+        }
+
+
+        #qrcode {
+
+            margin-top:20px;
+
+        }
+
+
+    </style>
+
 
 </head>
 
 
 <body>
 
-<h1>Bearing Traceability</h1>
+
+<div class="container">
+
+
+<h1>Bearing QR Traceability System</h1>
+
+
+<br>
+
+
+<label>
+Enter Bearing Serial Number:
+</label>
+
+
+<br><br>
 
 
 <input 
-id="serialInput"
-placeholder="Enter Serial Number"
-value="NFQ-W0008087">
+type="text" 
+id="serial"
+placeholder="Enter Serial Number">
 
 
 <button onclick="searchBearing()">
@@ -26,16 +142,30 @@ Search
 </button>
 
 
+
 <div id="result">
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<h3>QR Code</h3>
+
+
+<canvas id="qrcode"></canvas>
+
+
+
+</div>
+
+
+
+<!-- Main Script -->
 
 <script src="script.js"></script>
 
 
 </body>
+
 
 </html>
