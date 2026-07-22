@@ -59,9 +59,14 @@ async function searchBearing() {
 
         </table>
     `;
- QRCode.toCanvas(
+const qrData =
+"https://llbi-1.github.io/Bearing_QR_System/?sn=" +
+encodeURIComponent(b.serial_number);
+
+QRCode.toCanvas(
     document.getElementById("qrcode"),
-    b.serial_number,
+    qrData
+);
     function (error) {
         if (error) console.error(error);
     }
