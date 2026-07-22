@@ -1,38 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Bearing Traceability System</title>
 
-    <link rel="stylesheet" href="style.css">
+<title>Bearing Traceability</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-    <div class="container">
+<h1>Bearing Traceability</h1>
 
-        <h1>BEARING TRACEABILITY SYSTEM</h1>
 
-        <input type="text"
-               id="serial"
-               placeholder="Enter Serial Number">
+<input 
+id="serialInput"
+placeholder="Enter Serial Number"
+value="NFQ-W0008087">
 
-        <button onclick="searchBearing()">
-            Search
-        </button>
 
-        <div id="result"></div>
+<button onclick="searchBearing()">
+Search
+</button>
 
-        <h2>QR Code</h2>
 
-        <canvas id="qrcode"></canvas>
+<div id="result">
 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-    <script src="script.js"></script>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="script.js"></script>
+
 
 </body>
 
