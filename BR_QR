@@ -8,11 +8,8 @@
 <title>Bearing QR Generator</title>
 
 
-<!-- Supabase Library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-<!-- QR Code Library -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 
@@ -20,7 +17,7 @@
 
 body{
 
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background:#f4f4f4;
     padding:40px;
 
@@ -41,8 +38,8 @@ body{
 
 h1{
 
-    color:#003366;
     text-align:center;
+    color:#003366;
 
 }
 
@@ -67,16 +64,17 @@ button{
 }
 
 
-button:hover{
+#message{
 
-    background:#00509e;
+    margin-top:20px;
+    color:red;
 
 }
 
 
 #qrcode{
 
-    margin-top:30px;
+    margin-top:20px;
 
 }
 
@@ -114,20 +112,19 @@ id="serial"
 placeholder="Example: BRG001">
 
 
-
 <button onclick="generateQR()">
-
 Generate QR
-
 </button>
 
 
 
-<br><br>
+<div id="message"></div>
+
+
+<br>
 
 
 <canvas id="qrcode"></canvas>
-
 
 
 </div>
@@ -135,42 +132,43 @@ Generate QR
 
 
 
+
 <script>
 
 
-// Supabase Connection
+// SUPABASE CONNECTION
 
 const supabaseUrl =
 "https://xuladkirdleczvqlvkzr.supabase.co";
 
 
 const supabaseKey =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGFka2lyZGxlY3p2a3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2OTA5MDgsImV4cCI6MjEwMDI2NjkwOH0.tqLHurcorsedBgPEoeynwmajCJox4tXMfECkxhxwLiU";
-
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGFka2lyZGxlY3p2bHF2a3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2OTA5MDgsImV4cCI6MjEwMDI2NjkwOH0.tqLHurcorsedBgPEoeynwmajCJox4tXMfECkxhxwLiU";
 
 
 const client =
 supabase.createClient(
-supabaseUrl,
-supabaseKey
+    supabaseUrl,
+    supabaseKey
 );
 
 
 
 
-// Generate QR Function
+// GENERATE QR
 
 async function generateQR(){
 
 
-const serial =
+let serial =
 document.getElementById("serial").value.trim();
 
 
 
-if(serial===""){
+if(serial==""){
 
-alert("Please Enter Serial Number");
+document.getElementById("message").innerHTML =
+"Enter Serial Number";
 
 return;
 
@@ -191,7 +189,8 @@ const {data,error}=await client
 
 if(error){
 
-alert(error.message);
+document.getElementById("message").innerHTML =
+error.message;
 
 return;
 
@@ -200,9 +199,10 @@ return;
 
 
 
-if(data.length===0){
+if(data.length==0){
 
-alert("Bearing Not Found");
+document.getElementById("message").innerHTML =
+"Bearing Not Found";
 
 return;
 
@@ -210,20 +210,17 @@ return;
 
 
 
-const b=data[0];
+
+let bearing=data[0];
 
 
 
+// QR CONTENT
 
-// IMPORTANT QR URL
-
-const qrData =
-
+let qrData =
 "https://llbi-1.github.io/Bearing_QR_System/?sn="
-
 +
-
-encodeURIComponent(b.serial_number);
+encodeURIComponent(bearing.serial_number);
 
 
 
@@ -237,20 +234,25 @@ qrData,
 
 function(error){
 
-    if(error){
+if(error){
 
-        console.error(error);
-
-    }
+console.log(error);
 
 }
 
+}
 
 );
 
 
 
+document.getElementById("message").innerHTML =
+"QR Generated Successfully";
+
+
+
 }
+
 
 
 </script>
