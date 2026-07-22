@@ -33,6 +33,21 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script src="script.js"></script>
+window.onload = function () {
+
+    const params = new URLSearchParams(window.location.search);
+
+    const serial = params.get("sn");
+
+    if (serial) {
+
+        document.getElementById("serial").value = serial;
+
+        searchBearing();
+
+    }
+
+};
 
 </body>
 
