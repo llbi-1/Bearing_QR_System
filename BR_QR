@@ -1,201 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bearing QR Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bearing QR Generator</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
-    <style>
-        body{
-            font-family:Arial, Helvetica, sans-serif;
-            background:#f2f4f8;
-            padding:40px;
-        }
+<style>
 
-        .container{
-            width:700px;
-            max-width:95%;
-            margin:auto;
-            background:#fff;
-            padding:30px;
-            border-radius:10px;
-            box-shadow:0 4px 15px rgba(0,0,0,.15);
-        }
+body{
+    font-family:Arial;
+    background:#f2f4f8;
+    padding:40px;
+}
 
-        h1{
-            text-align:center;
-            color:#003366;
-            margin-bottom:30px;
-        }
+.container{
+    width:500px;
+    margin:auto;
+    background:#ffffff;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px #cccccc;
+}
 
-        input{
-            width:300px;
-            padding:10px;
-            font-size:16px;
-        }
+h1{
+    text-align:center;
+    color:#003366;
+}
 
-        button{
-            padding:10px 20px;
-            background:#003366;
-            color:#fff;
-            border:none;
-            cursor:pointer;
-        }
+input{
+    width:250px;
+    padding:10px;
+    font-size:16px;
+}
 
-        button:hover{
-            background:#00509e;
-        }
+button{
+    padding:10px 20px;
+    background:#003366;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
 
-        #result{
-            margin-top:20px;
-        }
+button:hover{
+    background:#00509e;
+}
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:20px;
-        }
+#qrcode{
+    margin-top:20px;
+}
 
-        th,td{
-            border:1px solid #ccc;
-            padding:10px;
-        }
+#url{
+    margin-top:20px;
+    word-break:break-all;
+    color:#003366;
+}
 
-        th{
-            background:#003366;
-            color:#fff;
-        }
+</style>
 
-        #qrcode{
-            margin-top:20px;
-        }
-
-        .url{
-            margin-top:15px;
-            word-break:break-all;
-            color:#003366;
-        }
-    </style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>Bearing QR Generator</h1>
+<h1>Bearing QR Generator</h1>
 
-    <input
-        type="text"
-        id="serial"
-        placeholder="Enter Serial Number">
+<label>Enter Bearing ID</label>
 
-    <button onclick="generateQR()">
-        Generate QR
-    </button>
+<br><br>
 
-    <div id="result"></div>
+<input
+type="number"
+id="bearingId"
+placeholder="Example : 1">
 
-    <canvas id="qrcode"></canvas>
+<button onclick="generateQR()">
+Generate QR
+</button>
 
-    <div id="url" class="url"></div>
+<br><br>
+
+<canvas id="qrcode"></canvas>
+
+<div id="url"></div>
 
 </div>
 
 <script>
 
-const supabaseUrl =
-"https://xuladkirdleczvqlvkzr.supabase.co";
+function generateQR(){
 
-const supabaseKey =
-"YOUR_ANON_PUBLIC_KEY";
+    const id =
+    document.getElementById("bearingId").value.trim();
 
-const client =
-supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-);eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGFka2lyZGxlY3p2cWx2a3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2OTA5MDgsImV4cCI6MjEwMDI2NjkwOH0.tqLHurcorsedBgPEoeynwmajCJox4tXMfECkxhxwLiU
+    if(id===""){
 
-async function generateQR(){
-
-    const serial =
-    document.getElementById("serial").value.trim();
-
-    if(serial===""){
-        alert("Enter Serial Number");
-        return;
-    }
-
-    const {data,error}=await client
-    .from("Bearing_tracebility")
-    .select("*")
-    .eq("serial_number",serial)
-    .single();
-
-    if(error){
-
-        document.getElementById("result").innerHTML=
-        "<h3 style='color:red'>Bearing Not Found</h3>";
+        alert("Please Enter Bearing ID");
 
         return;
+
     }
-
-    document.getElementById("result").innerHTML=`
-
-        <table>
-
-        <tr>
-            <th>Field</th>
-            <th>Value</th>
-        </tr>
-
-        <tr>
-            <td>ID</td>
-            <td>${data.id}</td>
-        </tr>
-
-        <tr>
-            <td>Code</td>
-            <td>${data.Code}</td>
-        </tr>
-
-        <tr>
-            <td>Description</td>
-            <td>${data.description}</td>
-        </tr>
-
-        <tr>
-            <td>Serial Number</td>
-            <td>${data.serial_number}</td>
-        </tr>
-
-        <tr>
-            <td>Part Number</td>
-            <td>${data.part_number}</td>
-        </tr>
-
-        <tr>
-            <td>Qty</td>
-            <td>${data.Qty}</td>
-        </tr>
-
-        </table>
-
-    `;
 
     const qrUrl =
-    "https://llbi-1.github.io/Bearing_QR_System/?id="
-    + data.id;
+    "https://llbi-1.github.io/Bearing_QR_System/?id=" + id;
 
     QRCode.toCanvas(
+
         document.getElementById("qrcode"),
-        qrUrl
+
+        qrUrl,
+
+        function(error){
+
+            if(error){
+
+                console.error(error);
+
+            }
+
+        }
+
     );
 
     document.getElementById("url").innerHTML =
-        "<strong>QR URL:</strong><br>" + qrUrl;
+    "<b>QR URL:</b><br>" + qrUrl;
 
 }
 
