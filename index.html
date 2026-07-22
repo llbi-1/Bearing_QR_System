@@ -3,137 +3,54 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bearing QR Traceability System</title>
+    <title>Bearing Traceability System</title>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
 
-<!-- QR Code -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-<style>
-
-body{
-    font-family: Arial;
-    margin:30px;
-    background:#f4f4f4;
-}
-
-.container{
-
-    background:white;
-    padding:25px;
-    max-width:700px;
-    border-radius:10px;
-
-}
-
-
-h1{
-    color:#1f4e79;
-}
-
-
-input{
-
-    width:300px;
-    padding:10px;
-    font-size:16px;
-
-}
-
-
-button{
-
-    padding:10px 20px;
-    background:#1f4e79;
-    color:white;
-    border:none;
-    cursor:pointer;
-
-}
-
-
-table{
-
-    margin-top:20px;
-    width:100%;
-    border-collapse:collapse;
-
-}
-
-
-td,th{
-
-    border:1px solid #999;
-    padding:10px;
-
-}
-
-
-th{
-
-    background:#1f4e79;
-    color:white;
-
-}
-
-
-#qrcode{
-
-    margin-top:20px;
-
-}
-
-</style>
-
+    <!-- QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 </head>
 
-
 <body>
-
 
 <div class="container">
 
+    <h1>BEARING TRACEABILITY SYSTEM</h1>
 
-<h1>Bearing QR Traceability System</h1>
+    <!-- Hidden search area (used only if no QR id is present) -->
+    <div id="searchSection">
 
+        <input
+            type="text"
+            id="serial"
+            placeholder="Enter Serial Number">
 
-<label>
-Bearing Serial Number
-</label>
+        <button onclick="searchBearing()">
+            Search
+        </button>
 
+    </div>
 
-<br><br>
+    <div id="result"></div>
 
+    <div class="qrSection">
 
-<input id="serial" 
-placeholder="Enter Serial Number">
+        <h2>QR Code</h2>
 
+        <canvas id="qrcode"></canvas>
 
-<button onclick="searchBearing()">
-Search
-</button>
-
-
-<div id="result"></div>
-
-
-<h3>QR Code</h3>
-
-<canvas id="qrcode"></canvas>
-
+    </div>
 
 </div>
 
-
-<script src="script.js" defer></script>
-
+<script src="script.js"></script>
 
 </body>
 
