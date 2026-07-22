@@ -1,192 +1,157 @@
-const supabaseUrl =
-"https://xuladkirdleczvqlvkzr.supabase.co";
+// ================================
+// SUPABASE CONFIGURATION
+// ================================
 
+const supabaseUrl = "https://xuladkirdleczvqlvkzr.supabase.co";
 
-const supabaseKey =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGFka2lyZGxlY3p2a3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2OTA5MDgsImV4cCI6MjEwMDI2NjkwOH0.tqLHurcorsedBgPEoeynwmajCJox4tXMfECkxhxwLiU";
-
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGFka2lyZGxlY3p2cWx2a3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2OTA5MDgsImV4cCI6MjEwMDI2NjkwOH0.tqLHurcorsedBgPEoeynwmajCJox4tXMfECkxhxwLiU";
 
 const client = supabase.createClient(
     supabaseUrl,
     supabaseKey
 );
 
+// ================================
+// SEARCH USING SERIAL NUMBER
+// ================================
 
+async function searchBearing() {
 
-// SEARCH BEARING
+    const serial = document.getElementById("serial").value.trim();
 
-async function searchBearing(){
+    if (serial === "") {
+        alert("Please Enter Serial Number");
+        return;
+    }
 
+    const { data, error } = await client
+        .from("Bearing_tracebility")
+        .select("*")
+        .eq("serial_number", serial)
+        .single();
 
-let serial =
-document.getElementById("serial").value.trim();
+    if (error) {
 
+        document.getElementById("result").innerHTML =
+            "<h2 style='color:red'>Bearing Not Found</h2>";
 
+        return;
+    }
 
-if(serial==""){
-
-alert("Enter Serial Number");
-
-return;
-
+    displayBearing(data);
 }
 
+// ================================
+// LOAD USING QR ID
+// ================================
 
+async function loadBearingById(id) {
 
-const {data,error}=await client
+    const { data, error } = await client
+        .from("Bearing_tracebility")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-.from("Bearing_tracebility")
+    if (error) {
 
-.select("*")
+        document.getElementById("result").innerHTML =
+            "<h2 style='color:red'>Bearing Not Found</h2>";
 
-.eq("serial_number",serial);
+        return;
+    }
 
-
-
-if(error){
-
-document.getElementById("result").innerHTML=
-"<h3 style='color:red'>"+error.message+"</h3>";
-
-return;
-
+    displayBearing(data);
 }
 
-
-
-if(data.length==0){
-
-document.getElementById("result").innerHTML=
-"<h3 style='color:red'>Bearing Not Found</h3>";
-
-return;
-
-}
-
-
-
-let b=data[0];
-
-
-
+// ================================
 // DISPLAY DATA
+// ================================
 
+function displayBearing(b) {
 
-document.getElementById("result").innerHTML=`
+    document.getElementById("result").innerHTML = `
 
 <h2>Bearing Details</h2>
 
-
 <table>
-
 
 <tr>
 <th>Field</th>
 <th>Value</th>
 </tr>
 
+<tr>
+<td>ID</td>
+<td>${b.id}</td>
+</tr>
 
 <tr>
 <td>Code</td>
-<td>${b.code || ""}</td>
+<td>${b.Code}</td>
 </tr>
-
 
 <tr>
 <td>Description</td>
-<td>${b.description || ""}</td>
+<td>${b.description}</td>
 </tr>
-
 
 <tr>
 <td>Serial Number</td>
-<td>${b.serial_number || ""}</td>
+<td>${b.serial_number}</td>
 </tr>
-
 
 <tr>
 <td>Part Number</td>
-<td>${b.part_number || ""}</td>
+<td>${b.part_number}</td>
 </tr>
-
 
 <tr>
 <td>Quantity</td>
-<td>${b.qty || ""}</td>
+<td>${b.Qty}</td>
 </tr>
-
 
 </table>
 
 `;
 
+    // Generate QR using ID
 
+    const qrUrl =
+        "https://llbi-1.github.io/Bearing_QR_System/?id=" +
+        b.id;
 
+    QRCode.toCanvas(
+        document.getElementById("qrcode"),
+        qrUrl,
+        function (error) {
 
-// CREATE QR URL
+            if (error)
+                console.error(error);
 
-
-let qrData =
-"https://llbi-1.github.io/Bearing_QR_System/?sn="
-+
-encodeURIComponent(b.serial_number);
-
-
-
-QRCode.toCanvas(
-
-document.getElementById("qrcode"),
-
-qrData,
-
-function(error){
-
-if(error)
-
-console.error(error);
+        }
+    );
 
 }
 
-);
+// ================================
+// AUTO LOAD AFTER QR SCAN
+// ================================
 
+window.onload = function () {
 
-}
+    const params = new URLSearchParams(window.location.search);
 
+    const id = params.get("id");
 
+    if (id) {
 
-// AUTO LOAD FROM QR SCAN
+        // Hide search section
+        document.getElementById("searchSection").style.display = "none";
 
+        // Load directly
+        loadBearingById(id);
 
-document.addEventListener(
-"DOMContentLoaded",
-function(){
+    }
 
-
-let params =
-new URLSearchParams(window.location.search);
-
-
-
-let qrSerial =
-params.get("sn");
-
-
-
-console.log("QR Serial Number:",qrSerial);
-
-
-
-if(qrSerial){
-
-
-document.getElementById("serial").value =
-qrSerial;
-
-
-searchBearing();
-
-
-}
-
-
-});
+};
