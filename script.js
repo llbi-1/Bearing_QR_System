@@ -4,6 +4,7 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
+
 async function searchBearing() {
 
     const serial = document.getElementById("serial").value.trim();
@@ -13,26 +14,36 @@ async function searchBearing() {
         return;
     }
 
+
     const { data, error } = await client
         .from("Bearing_tracebility")
         .select("*")
         .eq("serial_number", serial);
 
+
     if (error) {
+
         document.getElementById("result").innerHTML =
-            "<h3 style='color:red'>" + error.message + "</h3>";
+        "<h3 style='color:red'>" + error.message + "</h3>";
+
         return;
     }
 
+
     if (data.length === 0) {
+
         document.getElementById("result").innerHTML =
-            "<h3 style='color:red'>Bearing Not Found</h3>";
+        "<h3 style='color:red'>Bearing Not Found</h3>";
+
         return;
     }
+
 
     const b = data[0];
 
+
     document.getElementById("result").innerHTML = `
+
         <h2>Bearing Details</h2>
 
         <table border="1" cellpadding="10">
@@ -58,17 +69,48 @@ async function searchBearing() {
             </tr>
 
         </table>
-    `;
-const qrData =
-"https://llbi-1.github.io/Bearing_QR_System/?sn=" +
-encodeURIComponent(b.serial_number);
 
-QRCode.toCanvas(
-    document.getElementById("qrcode"),
-    qrData
-);
-    function (error) {
-        if (error) console.error(error);
-    }
-);
+    `;
+
+
+    // Generate QR Code with Website URL
+
+    const qrData =
+    "https://llbi-1.github.io/Bearing_QR_System/?sn=" +
+    encodeURIComponent(b.serial_number);
+
+
+    QRCode.toCanvas(
+        document.getElementById("qrcode"),
+        qrData,
+        function (error) {
+
+            if (error) {
+                console.error(error);
+            }
+
+        }
+    );
+
 }
+
+
+
+// Auto load bearing when QR is scanned
+
+window.onload = function () {
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const serialFromQR = urlParams.get("sn");
+
+
+    if (serialFromQR) {
+
+        document.getElementById("serial").value = serialFromQR;
+
+        searchBearing();
+
+    }
+
+};
